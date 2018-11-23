@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sayako.olympics.dao.ExamMapper">
+	<resultMap id="ExamResultMap" type="com.sayako.olympics.pojo.ExamQuestionInfo">
+		<id column="serialNo" jdbcType="INTEGER" property="serialNo" />
+		<result column="examno" jdbcType="INTEGER" property="examNo" />
+		<result column="examname" jdbcType="VARCHAR" property="examName" />
+		<result column="examdesc" jdbcType="VARCHAR" property="examDesc" />
+		<result column="examtype" jdbcType="VARCHAR" property="examType" />
+		<result column="inputinfo" jdbcType="VARCHAR" property="inputInfo" />
+		<result column="outputinfo" jdbcType="TIMESTAMP" property="outputInfo" />
+		<result column="inputdemo" jdbcType="TIMESTAMP" property="inputDemo" />
+		<result column="outputdemo" jdbcType="VARCHAR" property="outputDemo" />
+		<result column="examsource" jdbcType="VARCHAR" property="examSource" />
+		<result column="createuser" jdbcType="VARCHAR" property="createUser" />
+		<result column="createtime" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="validstatus" jdbcType="VARCHAR" property="validStatus" />
+		<result column="reverse1" jdbcType="VARCHAR" property="reverse1" />
+		<result column="reverse2" jdbcType="VARCHAR" property="reverse2" />
+		<result column="reverse3" jdbcType="VARCHAR" property="reverse3" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		serialNo, examno, examname, examdesc, examtype, inputinfo,
+		outputinfo,	inputdemo, outputdemo,
+		examsource, createuser, createtime, validstatus, reverse1, reverse2, reverse3
+	</sql>
+	<!--=Start getExams 分页查询用户列表examSearch -->
+	<select id="getExams" resultType="com.sayako.olympics.pojo.ExamQuestionInfo">
+		select
+		<include refid="Base_Column_List" />
+		from examQuestioninfo
+		<where>
+			<if test="examSearch.examName!=null and examSearch.examName!=''">
+				AND examName like CONCAT(CONCAT('%',#{examSearch.examName}),
+				'%')
+			</if>
+			<if test="examSearch.examType!=null and examSearch.examType!=''">
+				AND examType =#{examSearch.examType}
+			</if>
+			<if
+				test="examSearch.insertTimeStart!=null and examSearch.insertTimeStart!=''">
+				AND createtime &gt;= #{examSearch.insertTimeStart}
+			</if>
+			<if test="examSearch.insertTimeEnd!=null and examSearch.insertTimeEnd!=''">
+				AND createtime &lt;= #{examSearch.insertTimeEnd}
+			</if>
+		</where>
+		ORDER BY createtime DESC
+	</select>
+	<!--=End getUsers 分页查询用户列表 -->
+</mapper>
